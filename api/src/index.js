@@ -31,6 +31,85 @@ const path = require('path');
 const fs = require('fs');
 var cors = require('cors');
 import getTorrent from './Torrent';
+import Filetimer from './filetime'
+var schedule = require('node-schedule');
+
+// every 5 second test
+// schedule.scheduleJob('*/5 * * * * *', function(){
+schedule.scheduleJob('0 0 1 * *', function(){
+    // “At 00:00 on day-of-month 1.”
+    // console.log("5 second");
+    Filetimer();
+});
+
+// fs.readdir(__dirname + `/../Downloads`, (err, files) => {
+//     files.forEach(file => {
+//     //   console.log(file);
+//         fs.stat(__dirname + `/../Downloads/${file}`, function (err, stats) {
+//             // console.log(stats.atime);
+//             let timerFile = stats.atime;
+//             let fileH = timerFile.getHours();
+//             let fileM = timerFile.getMinutes();
+//             let fileMonth = timerFile.getMonth();
+//             let d = new Date();
+//             let m = d.getMinutes();
+//             let h = d.getHours();
+//             let monthNow = d.getMonth();
+//             console.log("ficheros:   " + fileH + ":" + fileM);
+//             console.log ("fecha now:  " + h + ":" + m);
+//             // if (h > fileH && m >= fileM) {
+//             if (monthNow > fileMonth) {
+//                 fs.unlink(__dirname + `/../Downloads/${file}`,function(err){
+//                     if(err) return console.log(err);
+//                     console.log('file deleted successfully');
+//                 });
+//             }
+//             if (err) {
+//                 return console.error(err);
+//             }
+//         });
+//     });
+// });
+
+// const OS = require('opensubtitles-api');
+
+// // SUBTITLES //
+// const OpenSubtitles = new OS({
+//     useragent:'TemporaryUserAgent',
+//     // username: 'Username',
+//     // password: 'Password',
+//     ssl: true
+// });
+
+// OpenSubtitles.login()
+//     .then(res => {
+//         console.log(res.token);
+//         // console.log(res.userinfo);
+//     })
+//     .catch(err => {
+//         console.log(err);
+// });
+
+// OpenSubtitles.search({
+//     sublanguageid: 'fre',       // Can be an array.join, 'all', or be omitted.
+//     hash: 'C168B84FC2B8CF062B67E4168E35C98F10BC7C74',   // Size + 64bit checksum of the first and last 64k
+//     filesize: '129994823',      // Total size, in bytes.
+//     path: __dirname + `/../Downloads/238.mp4`,        // Complete path to the video file, it allows
+//                                 //   to automatically calculate 'hash'.
+//     filename: '238.mp4',        // The video file name. Better if extension
+//                                 //   is included.
+//     season: '2',
+//     episode: '3',
+//     extensions: ['srt', 'vtt'], // Accepted extensions, defaults to 'srt'.
+//     limit: '3',                 // Can be 'best', 'all' or an
+//                                 // arbitrary nb. Defaults to 'best'
+//     imdbid: '238',           // 'tt528809' is fine too.
+//     fps: '23.96',               // Number of frames per sec in the video.
+//     query: 'The Godfather',   // Text-based query, this is not recommended.
+//     gzip: true                  // returns url to gzipped subtitles, defaults to false
+// });
+
+// // 
 
 const facebookOptions = {
     clientID: process.env.FACEBOOK_ID,
