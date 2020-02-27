@@ -83,7 +83,6 @@ export default function Movie() {
     const movieLink = useState("");
     const [Show, setShow] = useState(false);
     const [Go, setGo] = useState(false);
-    const [Yts, setYts] = useState(false)
     const Finisheds = () => {
         console.log("Waiting ...");
     }
@@ -149,38 +148,22 @@ export default function Movie() {
             return <span>Wait ... {seconds}</span>;
         }
     };
-    const Completionist = () => <span>Let's START</span>;
-    let Texton = <Countdown date={Date.now() + 40000} renderer={renderer} />
+    const Completionist = () => { if (Show) return <span>Enjoy Watching...</span>; else return <span>Let's START</span> };
+    let Texton = <Countdown date={Date.now() + 30000} renderer={renderer} />
     function startDownloadingYTS() {
         setGo(true);
-        addMovie({variables : {userId : userId, movieId: Tmdb.id}});
-        axios.get(`http://localhost:5000/downloadMovie/${movieID}/${ytsHash}`)
-        .then(data => {
-            if (data.data.status === "Downloading") {
-                console.log(data.data.message + " " + data.data.percentage + " %");
-            }
-            else
-            console.log("Erro Downloading ??")
-        })
-        .catch(error => {
-            console.log(error)
-        });
+        addMovie({ variables: { userId: userId, movieId: Tmdb.id } });
+        if (nameMovie) {
+            console.log("name => " + nameMovie)
+            axios.get(`http://localhost:5000/downloadMovie/${movieID}/${ytsHash}/${nameMovie}`)
+        }
+
     }
     function startDownloadingTPB() {
         setGo(true);
-        addMovie({variables : {userId : userId, movieId: Tmdb.id}});
+        addMovie({ variables: { userId: userId, movieId: Tmdb.id } });
         if (tpbHash) {
-            axios.get(`http://localhost:5000/downloadMovie/${movieID}/${tpbHash}`)
-            .then(data => {
-                if (data.data.status === "Downloading") {
-                    console.log(data.data.message + " " + data.data.percentage + " %");
-                }
-                else
-                console.log("Erro Downloading ??")
-            })
-            .catch(error => {
-                console.log(error)
-            });
+            axios.get(`http://localhost:5000/downloadMovie/${movieID}/${tpbHash}/${nameMovie}`)
         }
     }
     const Finish = () => {
@@ -208,6 +191,8 @@ export default function Movie() {
                     {Show && <Video controls autoPlay reload loop="" >
                         <source src={`http://localhost:5000/playMovie/${movieID}`} type="video/mp4" />
                         <source src={`http://localhost:5000/playMovie/${movieID}`} type="video/webm" />
+                        <track label="English" kind="captions" src="/public/subtitles.238.fr.vtt" default />
+                        <track label="French" kind="captions" src="/public/subtitles.238.fr.vtt" />
                     </Video>}
                     <Text>Resume: </Text>
                     <Resumen>{Tmdb.overview}</Resumen>
@@ -233,129 +218,129 @@ export default function Movie() {
 }
 
 const Resumen = styled.p`
-    justify-content: center;
-    text-align: left;
-    font-size: 14px;
-    margin-left: 1rem;
-    padding: 0 2rem;
+                justify-content: center;
+                text-align: left;
+                font-size: 14px;
+                margin-left: 1rem;
+                padding: 0 2rem;
     @media (max-width: 768px) {
-      font-size: 12px;
-    }
-`
+                    font - size: 12px;
+              }
+          `
 
 const Link2 = styled.button`
-  width: 300px;
-  height: 50px;
+            width: 300px;
+            height: 50px;
   background: ${props => props.theme.colors.ButtonT};
-  border: none;
-  font-size: 1rem;
+                border: none;
+                font-size: 1rem;
   color: ${props => props.theme.colors.textColor};
-  outline: 0;
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  border-radius: 5px;
+                outline: 0;
+                -webkit-border-radius: 5px;
+                -moz-border-radius: 5px;
+                border-radius: 5px;
   @media (max-width: 768px) {
-      width: 100%;
-    }
-  transition-duration: 0.3s;
+                    width: 100%;
+              }
+            transition-duration: 0.3s;
   &:hover {
-    color: black;
+                    color: black;
     background-color: ${props => props.theme.colors.textColor};
-    border-color: white
-  }
-`;
+                border-color: white
+              }
+            `;
 
 const Link1 = styled.button`
-    margin-bottom: 1rem;
-    width: 300px;
-    height: 50px;
+                margin-bottom: 1rem;
+                width: 300px;
+                height: 50px;
     background: ${props => props.theme.colors.ButtonT};
-    border: none;
-    font-size: 1rem;
+                border: none;
+                font-size: 1rem;
     color: ${props => props.theme.colors.textColor};
-    outline: 0;
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
-    border-radius: 5px;
+                outline: 0;
+                -webkit-border-radius: 5px;
+                -moz-border-radius: 5px;
+                border-radius: 5px;
     @media (max-width: 768px) {
-        width: 100%;
-    }
-    transition-duration: 0.3s;
+                    width: 100%;
+            }
+            transition-duration: 0.3s;
     &:hover {
-        color: black;
+                    color: black;
         background: ${props => props.theme.colors.textColor};
-        border-color: white
-    }
-`;
+                border-color: white
+            }
+        `;
 
 const MoviePage = styled.div`
-    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5));
+            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5));
     background-color: ${props => props.theme.colors.cardBackground};
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
-    background-size: cover;
-    display: flex;
-    min-height: 100vh;
-    flex-direction: column;
-    color: white;
-`
+                -webkit-background-size: cover;
+                -moz-background-size: cover;
+                -o-background-size: cover;
+                background-size: cover;
+                display: flex;
+                min-height: 100vh;
+                flex-direction: column;
+                color: white;
+            `
 const Iframe = styled.iframe`
-    margin: 0 auto 2rem; 
-    width: 60vmin;
-    height: 30vmin;
-`;
+                margin: 0 auto 2rem;
+                width: 60vmin;
+                height: 30vmin;
+            `;
 // const HR = styled.hr`
 //     border: 1px solid white;
 // `
 const Content = styled.div`
-    display: flex;
-    flex-direction: column;
-    width: 90vmin;
-    margin: 0 auto;
-`
+                display: flex;
+                flex-direction: column;
+                width: 90vmin;
+                margin: 0 auto;
+            `
 const Split = styled.div`
-    display: flex;
-    justify-content: space-evenly;
-    align-items: flex-start;
-`
+                display: flex;
+                justify-content: space-evenly;
+                align-items: flex-start;
+            `
 const Left = styled.div`
-    width: 70vmin;
-    display: flex;
-    flex-direction: column;
-    text-align: center;
-`
+                width: 70vmin;
+                display: flex;
+                flex-direction: column;
+                text-align: center;
+            `
 const Video = styled.video`
-    margin-top: 0;
-    margin: 0 5vmin 5vmin 5vmin;
-    width: 60vmin;
-    height: 40vmin;
-`
+                margin-top: 0;
+                margin: 0 5vmin 5vmin 5vmin;
+                width: 60vmin;
+                height: 40vmin;
+            `
 const Right = styled.div`
-    display: flex;
-    flex-direction: column;
-    /* width: 30vmin; */
-`
+                display: flex;
+                flex-direction: column;
+                /* width: 30vmin; */
+            `
 
 const Picture = styled.img`
-    padding-bottom: 1rem;
-    width: 25vmin;
-    height: 25min;
-    margin: 0 auto;
-`;
+                padding-bottom: 1rem;
+                width: 25vmin;
+                height: 25min;
+                margin: 0 auto;
+            `;
 
 const Text = styled.span`
-    font-weight: bold;
-    margin: 0.5rem;
+                font-weight: bold;
+                margin: 0.5rem;
     @media (max-width: 768px) {
-        font-size: 12px;
-    }
-`;
+                    font - size: 12px;
+            }
+        `;
 
 const TextA = styled.span`
-    font-weight: bold;
-    padding: 1rem;
-    text-align: left;
-    font-size: 2em;
-    margin: 0.5rem;
+            font-weight: bold;
+            padding: 1rem;
+            text-align: left;
+            font-size: 2em;
+            margin: 0.5rem;
 `;
