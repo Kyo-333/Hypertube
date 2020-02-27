@@ -219,6 +219,7 @@ const app = express();
 
 //*******STREAM ROUTE********//
 app.use(cors())
+app.get('/downloadSubtitles/:movieID/:movieName', getSubtitles);
 app.get('/downloadMovie/:movieID/:torrentHash/:movieName', function (req, res) {
     const movieID = req.params.movieID;
     const torrentHash = req.params.torrentHash;
@@ -231,7 +232,6 @@ app.get('/downloadMovie/:movieID/:torrentHash/:movieName', function (req, res) {
         })
     const magnetLink = `magnet:?xt=urn:btih:${torrentHash}`;
     getTorrent(movieID, magnetLink, req, res);
-    getSubtitles(movieName, movieID);
 });
 
 app.get('/playMovie/:movieID', function (req, res) {

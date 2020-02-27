@@ -79,7 +79,7 @@ export default function Movie() {
     const user = useContext(AuthContext);
     const userId = user.user.id;
     const [addMovie] = useMutation(ADD_SEEN_MOVIE);
-
+    const [SubURL, setSubURL] = useState("");
     const movieLink = useState("");
     const [Show, setShow] = useState(false);
     const [Go, setGo] = useState(false);
@@ -149,12 +149,25 @@ export default function Movie() {
         }
     };
     const Completionist = () => { if (Show) return <span>Enjoy Watching...</span>; else return <span>Let's START</span> };
-    let Texton = <Countdown date={Date.now() + 30000} renderer={renderer} />
+    let Texton = <Countdown date={Date.now() + 10000} renderer={renderer} />
+    
     function startDownloadingYTS() {
         setGo(true);
         addMovie({ variables: { userId: userId, movieId: Tmdb.id } });
         if (nameMovie) {
             console.log("name => " + nameMovie)
+            axios.get(`http://localhost:5000/downloadSubtitles/${movieID}/${nameMovie}`).then(res => {
+                // console.log(JSON.stringify(res.data.subtitlesEnBase64));
+                const URL = window.URL || window.webkitURL;
+                const Subtitles64 = window.atob(res.data.subtitlesEnBase64);
+                    const subtitlesBlob= new Blob([Subtitles64], {
+                      type: "text/vtt"
+                    });
+                const UrlSubtitlesEn = URL.createObjectURL(subtitlesBlob);
+                console.log(UrlSubtitlesEn);
+                setSubURL(UrlSubtitlesEn);
+                // console.log('sous titre' + Subtitles64)
+            });
             axios.get(`http://localhost:5000/downloadMovie/${movieID}/${ytsHash}/${nameMovie}`)
         }
 
@@ -191,8 +204,8 @@ export default function Movie() {
                     {Show && <Video controls autoPlay reload loop="" >
                         <source src={`http://localhost:5000/playMovie/${movieID}`} type="video/mp4" />
                         <source src={`http://localhost:5000/playMovie/${movieID}`} type="video/webm" />
-                        <track label="English" kind="captions" src="/public/subtitles.238.fr.vtt" default />
-                        <track label="French" kind="captions" src="/public/subtitles.238.fr.vtt" />
+                        <track label="English" kind="captions" src={SubURL} default />
+                        <track label="French" kind="captions" src={SubURL} />
                     </Video>}
                     <Text>Resume: </Text>
                     <Resumen>{Tmdb.overview}</Resumen>

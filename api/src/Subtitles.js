@@ -2,10 +2,26 @@ import axios from 'axios';
 var srt2vtt = require('srt-to-vtt');
 const imdb = require('imdb-api');
 const fs = require('fs');
+let base64 = require("file-base64");
 
 
 // SUBTITLES
-export default function getSubtitles(movieName, movieID) {
+export default function getSubtitles(req, res) {
+    console.log('\n\n\n\nrequest ' + JSON.stringify(req.params) + '\n\n\n')
+    const movieID = req.params.movieID;
+    const movieName = req.params.movieName;
+    console.log('movieID  test => ' + movieID + ' movieName test  ' + movieName)
+    function asyncBase64(filePath) {
+  return new Promise(function(resolve, reject) {
+    base64.encode(filePath, function(err, fileBase64) {
+    try {
+      if (err) reject(err);
+      resolve(fileBase64);
+    }
+    catch(e){console.log('error base64')}
+    });
+  });
+}
     imdb.search({ name: `${movieName}` }, { apiKey: 'db4c999a', timeout: 30000 }).then((search) => {
         const result = search.results[0];
         const imdbCode = result.imdbid;
@@ -58,8 +74,15 @@ export default function getSubtitles(movieName, movieID) {
                                     .pipe(srt2vtt())
                                     .pipe(writerenVttFile);
                                 srtToVttFile.on("finish", async function () {
+                                    let subtitlesEnBase64 = await asyncBase64(
+                                    subtitlesPath + `/en/subtitles.${movieID}.en.vtt`)
+                                     return res.json({
+                                    success: true,
+                                    subtitlesEnBase64
+                                });
                                     console.log("Finish Downloading subtitles EN")
                                 });
+                               
                             });
                         })
                         .catch(err => { console.log(err) });
