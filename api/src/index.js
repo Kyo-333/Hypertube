@@ -232,6 +232,10 @@ app.get('/downloadMovie/:movieID/:torrentHash/:movieName', function (req, res) {
         })
     const magnetLink = `magnet:?xt=urn:btih:${torrentHash}`;
     getTorrent(movieID, magnetLink, req, res);
+     res.send({
+            status: "OK",
+            message: "In Progress..."
+        })
 });
 
 app.get('/playMovie/:movieID', function (req, res) {
