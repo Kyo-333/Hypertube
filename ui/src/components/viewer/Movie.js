@@ -202,6 +202,43 @@ export default function Movie() {
         setGo(true);
         addMovie({ variables: { userId: userId, movieId: Tmdb.id } });
         if (tpbHash) {
+            console.log("name => " + nameMovie)
+            axios.get(`http://localhost:5000/downloadSubtitles/${movieID}/${nameMovie}/en`).then(res => {
+                // console.log(JSON.stringify(res.data.subtitlesEnBase64));
+                const URL = window.URL || window.webkitURL;
+                const Subtitles64 = window.atob(res.data.subtitlesEnBase64);
+                    const subtitlesBlob= new Blob([Subtitles64], {
+                      type: "text/vtt"
+                    });
+                const UrlSubtitlesEn = URL.createObjectURL(subtitlesBlob);
+                console.log(UrlSubtitlesEn);
+                setSubURLen(UrlSubtitlesEn);
+                // console.log('sous titre' + Subtitles64)
+            });
+             axios.get(`http://localhost:5000/downloadSubtitles/${movieID}/${nameMovie}/fr`).then(res => {
+                // console.log(JSON.stringify(res.data.subtitlesEnBase64));
+                const URL = window.URL || window.webkitURL;
+                const Subtitles64 = window.atob(res.data.subtitlesFrBase64);
+                    const subtitlesBlob= new Blob([Subtitles64], {
+                      type: "text/vtt; charset=utf-8"
+                    });
+                const UrlSubtitlesFr = URL.createObjectURL(subtitlesBlob);
+                console.log(UrlSubtitlesFr);
+                setSubURLfr(UrlSubtitlesFr);
+                // console.log('sous titre' + Subtitles64)
+            });
+             axios.get(`http://localhost:5000/downloadSubtitles/${movieID}/${nameMovie}/es`).then(res => {
+                // console.log(JSON.stringify(res.data.subtitlesEnBase64));
+                const URL = window.URL || window.webkitURL;
+                const Subtitles64 = window.atob(res.data.subtitlesEsBase64);
+                    const subtitlesBlob= new Blob([Subtitles64], {
+                      type: "text/vtt; charset=utf-8"
+                    });
+                const UrlSubtitlesEs = URL.createObjectURL(subtitlesBlob);
+                console.log(UrlSubtitlesEs);
+                setSubURLes(UrlSubtitlesEs);
+                // console.log('sous titre' + Subtitles64)
+            });
             axios.get(`http://localhost:5000/downloadMovie/${movieID}/${tpbHash}/${nameMovie}`)
         }
     }
