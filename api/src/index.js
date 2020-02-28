@@ -219,7 +219,7 @@ const app = express();
 
 //*******STREAM ROUTE********//
 app.use(cors())
-app.get('/downloadSubtitles/:movieID/:movieName', getSubtitles);
+app.get('/downloadSubtitles/:movieID/:movieName/:lang', getSubtitles);
 app.get('/downloadMovie/:movieID/:torrentHash/:movieName', function (req, res) {
     const movieID = req.params.movieID;
     const torrentHash = req.params.torrentHash;

@@ -10,6 +10,7 @@ export default function getSubtitles(req, res) {
     console.log('\n\n\n\nrequest ' + JSON.stringify(req.params) + '\n\n\n')
     const movieID = req.params.movieID;
     const movieName = req.params.movieName;
+    const lang = req.params.lang;
     console.log('movieID  test => ' + movieID + ' movieName test  ' + movieName)
     function asyncBase64(filePath) {
   return new Promise(function(resolve, reject) {
@@ -59,8 +60,7 @@ export default function getSubtitles(req, res) {
             extensions: ["srt", "vtt"]
         })
             .then(async (subtitles) => {
-                // console.log(subtitles.en[0].url)
-                if (subtitles.en && subtitles.en[0].url) {
+                if (subtitles.en && subtitles.en[0].url && lang === 'en') {
                     await axios({
                         method: "get",
                         url: subtitles.en[0].url,
@@ -86,7 +86,7 @@ export default function getSubtitles(req, res) {
                             });
                         })
                         .catch(err => { console.log(err) });
-                } if (subtitles.fr && subtitles.fr[0].url) {
+                } if (subtitles.fr && subtitles.fr[0].url && lang === 'fr') {
                     await axios({
                         method: "get",
                         url: subtitles.fr[0].url,
@@ -100,13 +100,19 @@ export default function getSubtitles(req, res) {
                                     .pipe(srt2vtt())
                                     .pipe(writerfrVttFile);
                                 srtToVttFile.on("finish", async function () {
+                                    let subtitlesFrBase64 = await asyncBase64(
+                                    subtitlesPath + `/fr/subtitles.${movieID}.fr.vtt`)
+                                    return res.json({
+                                    success: true,
+                                    subtitlesFrBase64
+                                });
                                     console.log("Finish Downloading subtitles FR")
                                 });
                             });
                         })
                         .catch(err => { console.log(err) });
                 }
-                if (subtitles.es && subtitles.es[0].url) {
+                if (subtitles.es && subtitles.es[0].url && lang === 'es') {
                     await axios({
                         method: "get",
                         url: subtitles.es[0].url,
@@ -120,6 +126,12 @@ export default function getSubtitles(req, res) {
                                     .pipe(srt2vtt())
                                     .pipe(writeresVttFile);
                                 srtToVttFile.on("finish", async function () {
+                                    let subtitlesEsBase64 = await asyncBase64(
+                                    subtitlesPath + `/es/subtitles.${movieID}.es.vtt`)
+                                    return res.json({
+                                    success: true,
+                                    subtitlesEsBase64
+                                });
                                     console.log("Finish Downloading subtitles ES")
                                 });
                             });

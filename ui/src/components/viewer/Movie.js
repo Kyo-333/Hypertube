@@ -79,7 +79,9 @@ export default function Movie() {
     const user = useContext(AuthContext);
     const userId = user.user.id;
     const [addMovie] = useMutation(ADD_SEEN_MOVIE);
-    const [SubURL, setSubURL] = useState("");
+    const [SubURLen, setSubURLen] = useState("");
+    const [SubURLfr, setSubURLfr] = useState("");
+    const [SubURLes, setSubURLes] = useState("");
     const movieLink = useState("");
     const [Show, setShow] = useState(false);
     const [Go, setGo] = useState(false);
@@ -156,7 +158,7 @@ export default function Movie() {
         addMovie({ variables: { userId: userId, movieId: Tmdb.id } });
         if (nameMovie) {
             console.log("name => " + nameMovie)
-            axios.get(`http://localhost:5000/downloadSubtitles/${movieID}/${nameMovie}`).then(res => {
+            axios.get(`http://localhost:5000/downloadSubtitles/${movieID}/${nameMovie}/en`).then(res => {
                 // console.log(JSON.stringify(res.data.subtitlesEnBase64));
                 const URL = window.URL || window.webkitURL;
                 const Subtitles64 = window.atob(res.data.subtitlesEnBase64);
@@ -165,7 +167,31 @@ export default function Movie() {
                     });
                 const UrlSubtitlesEn = URL.createObjectURL(subtitlesBlob);
                 console.log(UrlSubtitlesEn);
-                setSubURL(UrlSubtitlesEn);
+                setSubURLen(UrlSubtitlesEn);
+                // console.log('sous titre' + Subtitles64)
+            });
+             axios.get(`http://localhost:5000/downloadSubtitles/${movieID}/${nameMovie}/fr`).then(res => {
+                // console.log(JSON.stringify(res.data.subtitlesEnBase64));
+                const URL = window.URL || window.webkitURL;
+                const Subtitles64 = window.atob(res.data.subtitlesFrBase64);
+                    const subtitlesBlob= new Blob([Subtitles64], {
+                      type: "text/vtt"
+                    });
+                const UrlSubtitlesFr = URL.createObjectURL(subtitlesBlob);
+                console.log(UrlSubtitlesFr);
+                setSubURLfr(UrlSubtitlesFr);
+                // console.log('sous titre' + Subtitles64)
+            });
+             axios.get(`http://localhost:5000/downloadSubtitles/${movieID}/${nameMovie}/es`).then(res => {
+                // console.log(JSON.stringify(res.data.subtitlesEnBase64));
+                const URL = window.URL || window.webkitURL;
+                const Subtitles64 = window.atob(res.data.subtitlesEsBase64);
+                    const subtitlesBlob= new Blob([Subtitles64], {
+                      type: "text/vtt"
+                    });
+                const UrlSubtitlesEs = URL.createObjectURL(subtitlesBlob);
+                console.log(UrlSubtitlesEs);
+                setSubURLes(UrlSubtitlesEs);
                 // console.log('sous titre' + Subtitles64)
             });
             axios.get(`http://localhost:5000/downloadMovie/${movieID}/${ytsHash}/${nameMovie}`)
@@ -204,8 +230,9 @@ export default function Movie() {
                     {Show && <Video controls autoPlay reload loop="" >
                         <source src={`http://localhost:5000/playMovie/${movieID}`} type="video/mp4" />
                         <source src={`http://localhost:5000/playMovie/${movieID}`} type="video/webm" />
-                        <track label="English" kind="captions" src={SubURL} default />
-                        <track label="French" kind="captions" src={SubURL} />
+                        <track label="English" kind="captions" src={SubURLen} default />
+                        <track label="French" kind="captions" src={SubURLfr} />
+                        <track label="Spanish" kind="captions" src={SubURLes} />
                     </Video>}
                     <Text>Resume: </Text>
                     <Resumen>{Tmdb.overview}</Resumen>
