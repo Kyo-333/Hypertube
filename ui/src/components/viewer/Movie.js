@@ -151,7 +151,7 @@ export default function Movie() {
         }
     };
     const Completionist = () => { if (Show) return <span>Enjoy Watching...</span>; else return <span>Let's START</span> };
-    let Texton = <Countdown date={Date.now() + 30000} renderer={renderer} />
+    let Texton = <Countdown date={Date.now() + 40000} renderer={renderer} />
     
     function startDownloadingYTS() {
         setGo(true);

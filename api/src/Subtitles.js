@@ -7,11 +7,9 @@ let base64 = require("file-base64");
 
 // SUBTITLES
 export default function getSubtitles(req, res) {
-    console.log('\n\n\n\nrequest ' + JSON.stringify(req.params) + '\n\n\n')
     const movieID = req.params.movieID;
     const movieName = req.params.movieName;
     const lang = req.params.lang;
-    console.log('movieID  test => ' + movieID + ' movieName test  ' + movieName)
     function asyncBase64(filePath) {
   return new Promise(function(resolve, reject) {
     base64.encode(filePath, function(err, fileBase64) {
