@@ -313,6 +313,22 @@ app.get('/playMovie/:movieID', function (req, res) {
         });
     });
 });
+
+if (!fs.existsSync("Downloads")) {
+      fs.mkdirSync("Downloads");
+    }
+if (!fs.existsSync("Downloads/Subtitles")) {
+      fs.mkdirSync("Downloads/Subtitles");
+    }
+if (!fs.existsSync("Downloads/Subtitles/en")) {
+      fs.mkdirSync("Downloads/Subtitles/en");
+    }
+if (!fs.existsSync("Downloads/Subtitles/fr")) {
+      fs.mkdirSync("Downloads/Subtitles/fr");
+    }
+if (!fs.existsSync("Downloads/Subtitles/es")) {
+      fs.mkdirSync("Downloads/Subtitles/es");
+    }
 //*******STREAM ROUTE********//
 
 

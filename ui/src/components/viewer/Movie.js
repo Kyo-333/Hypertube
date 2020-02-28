@@ -151,7 +151,7 @@ export default function Movie() {
         }
     };
     const Completionist = () => { if (Show) return <span>Enjoy Watching...</span>; else return <span>Let's START</span> };
-    let Texton = <Countdown date={Date.now() + 10000} renderer={renderer} />
+    let Texton = <Countdown date={Date.now() + 30000} renderer={renderer} />
     
     function startDownloadingYTS() {
         setGo(true);
@@ -175,7 +175,7 @@ export default function Movie() {
                 const URL = window.URL || window.webkitURL;
                 const Subtitles64 = window.atob(res.data.subtitlesFrBase64);
                     const subtitlesBlob= new Blob([Subtitles64], {
-                      type: "text/vtt"
+                      type: "text/vtt; charset=utf-8"
                     });
                 const UrlSubtitlesFr = URL.createObjectURL(subtitlesBlob);
                 console.log(UrlSubtitlesFr);
@@ -187,7 +187,7 @@ export default function Movie() {
                 const URL = window.URL || window.webkitURL;
                 const Subtitles64 = window.atob(res.data.subtitlesEsBase64);
                     const subtitlesBlob= new Blob([Subtitles64], {
-                      type: "text/vtt"
+                      type: "text/vtt; charset=utf-8"
                     });
                 const UrlSubtitlesEs = URL.createObjectURL(subtitlesBlob);
                 console.log(UrlSubtitlesEs);
