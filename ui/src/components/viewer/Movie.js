@@ -75,7 +75,7 @@ export default function Movie() {
             }
         }
     `;
-
+    const movieID = useParams().id;
     const user = useContext(AuthContext);
     const userId = user.user.id;
     const [addMovie] = useMutation(ADD_SEEN_MOVIE);
@@ -91,8 +91,6 @@ export default function Movie() {
     }
     const [Finished, setFinished] = useState(Finisheds);
     const [nameMovie, setNameMovie] = useState("");
-
-    const movieID = useParams().id;
     const infoTMDB = useQuery(FETCH_INFO_TMDB, {
         variables: {
             id: movieID
@@ -264,9 +262,9 @@ export default function Movie() {
                     {Show && <Video controls autoPlay reload loop="" >
                         <source src={`http://localhost:5000/playMovie/${movieID}`} type="video/mp4" />
                         <source src={`http://localhost:5000/playMovie/${movieID}`} type="video/webm" />
-                        <track label="English" kind="captions" src={SubURLen} default />
-                        <track label="French" kind="captions" src={SubURLfr} />
-                        <track label="Spanish" kind="captions" src={SubURLes} />
+                        {SubURLen && <track label="English" kind="captions" src={SubURLen} default />}
+                        {SubURLfr && <track label="French" kind="captions" src={SubURLfr} />}
+                        {SubURLes && <track label="Spanish" kind="captions" src={SubURLes} />}
                     </Video>}
                     <Text>Resume: </Text>
                     <Resumen>{Tmdb.overview}</Resumen>
