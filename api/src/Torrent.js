@@ -64,7 +64,11 @@ export default function getTorrent(filename, magnetLink, req, res) {
             });
         });
         videoStream.on('end', () => {
-            console.log('Video stream has reached is end')
+            console.log('Video stream has reached is end');
+            res.send({
+                status: "OK",
+                message: "Movie has been Downloaded..."
+            })
         })
         if (needConvert) {
             console.log('Pumping to file...')
